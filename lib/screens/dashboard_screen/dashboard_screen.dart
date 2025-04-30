@@ -1,3 +1,6 @@
+import 'package:cruze_control/screens/dashboard_screen/home_screen/home_screen.dart';
+import 'package:cruze_control/screens/dashboard_screen/setting_screen/setting_screen.dart';
+import 'package:cruze_control/screens/dashboard_screen/status_screen/status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -9,245 +12,69 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  Widget _buildIcon(String assetName, bool isSelected) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isSelected ? Colors.grey.withOpacity(0.2) : Colors.transparent,
+      ),
+      child: SvgPicture.asset(
+        assetName,
+        color: isSelected ? Colors.yellow : Colors.white,
+        width: 24,
+        height: 24,
+      ),
+    );
+  }
 
-  final bool isOn = false;
+  int _selectedIndex = 1; // Default to Home
 
+  final List<Widget> _screens = [
+    StatusScreen(),
+    HomeScreen(),
+    SettingsScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
-
-
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Color(0xff1F1F1F),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 80, right: 20, left: 20),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 170,
-                    height: 65,
-                    decoration: BoxDecoration(
-                        color: Color(0xff444444),
-                        borderRadius: BorderRadius.circular(35)),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset('assets/svg_icons/Vector.svg'),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                      'assets/svg_icons/location.svg'),
-                                  Text(
-                                    'Jaipur',
-                                    style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.white),
-                                  )
-                                ],
-                              ),
-                              Text(
-                                '25°C, Cloudy',
-                                style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  CircleAvatar(
-                    radius: 27.5,
-                    backgroundColor: Color(0xff444444),
-                    child: SvgPicture.asset('assets/svg_icons/user.svg'),
-                  )
-                ],
-              ),
-
-              SizedBox(
-                height: 20,
-              ),
-
-              Container(
-                width: 370,
-                height: 180,
-                decoration: BoxDecoration(
-                    color: Color(0xff444444),
-                    borderRadius: BorderRadius.circular(35)),
-
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Hunter 350', style: TextStyle(fontSize: 24, fontFamily: 'Inter', fontWeight: FontWeight.w700,color: Colors.white),),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-
-                          Text('30kmpl', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Color(0xffEFEFEF)),),
-                          RichText(text:
-
-                          TextSpan(
-                            text: 'Total', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                            children: [
-
-                              TextSpan(
-
-                                text: ' 255km',
-                               style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Colors.white)
-                              )
-                            ]
-
-                          )
-
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(
-                        height: 20,
-                      ),
-
-                      Divider(
-                        height: 0.1,
-                        color: Color(0xff525252),
-                      ),
-
-                      SizedBox(
-                        height: 10,
-                      ),
-
-                      Text('Last Ride', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Colors.white) ),
-
-                      SizedBox(
-                        height: 10,
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-
-                          RichText(text:
-
-                          TextSpan(
-                              text: 'Avg', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                              children: [
-
-                                TextSpan(
-
-                                    text: ' 26kmpl',
-                                    style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Color(0xffF2CE60))
-                                )
-                              ]
-
-                          )
-
-                          ),
-
-                          RichText(text:
-
-                          TextSpan(
-                              text: 'Distance', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                              children: [
-
-                                TextSpan(
-
-                                    text: ' 18km',
-                                    style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Color(0xffF2CE60))
-                                )
-                              ]
-
-                          )
-
-                          ),
-
-
-                          RichText(text:
-
-                          TextSpan(
-                              text: 'Speed', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                              children: [
-
-                                TextSpan(
-
-                                    text: ' 74km/h',
-                                    style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Color(0xffF2CE60))
-                                )
-                              ]
-
-                          )
-
-                          ),
-
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SizedBox(
-                height: 50,
-              ),
-
-              Container(
-                width: 170,
-                height: 220,
-
-                child: Column(
-                  children: [
-                    Container(
-                      width: 150,
-                      height: 150,
-                      child: SvgPicture.asset('assets/svg_icons/switch.svg'),
-                    ),
-
-                    SizedBox(
-                      height: 20,
-                    ),
-
-                    Text('Bike Mode Off',style: TextStyle(fontSize: 24,fontWeight: FontWeight.w600,color: Color(0xff444444,)),)
-
-                  ],
-                ),
-
-              ),
-
-              Container(
-                width: 300,
-                height: 170,
-                child: Image.asset('assets/images/hunter.png',fit: BoxFit.fill,),
-              )
-
-
-
-            ],
-          ),
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashFactory: NoSplash.splashFactory,
+          highlightColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          backgroundColor: const Color(0xff2F2F2F),
+          elevation: 4,
+          selectedItemColor: Colors.yellow,
+          unselectedItemColor: Colors.white,
+          items: [
+            BottomNavigationBarItem(
+              icon: _buildIcon(
+                  'assets/svg_icons/status.svg', _selectedIndex == 0),
+              label: 'Status',
+            ),
+            BottomNavigationBarItem(
+              icon:
+                  _buildIcon('assets/svg_icons/home.svg', _selectedIndex == 1),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: _buildIcon(
+                  'assets/svg_icons/setting.svg', _selectedIndex == 2),
+              label: 'Setting',
+            ),
+          ],
         ),
       ),
     );
