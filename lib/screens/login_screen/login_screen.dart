@@ -1,7 +1,10 @@
 import 'dart:ui';
 
+import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/register_screen/register_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../forgot_password/forgot_password.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -106,7 +109,9 @@ class LoginScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
+                            },
                             child: const Text(
                               'Forgot password?',
                               style: TextStyle(color: Colors.white70),
@@ -119,7 +124,7 @@ class LoginScreen extends StatelessWidget {
                           height: 60,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xffF2CE60),
@@ -136,19 +141,25 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         Center(
-                          child: RichText(
-                            text: const TextSpan(
-                              text: "Don’t have an account? ",
-                              style: TextStyle(color: Colors.white),
-                              children: [
-                                TextSpan(
-                                  text: "Register",
-                                  style: TextStyle(
-                                    color: Color(0xffF2CE60),
-                                    fontWeight: FontWeight.bold,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+
+                            },
+                            child: RichText(
+                              text: const TextSpan(
+                                text: "Don’t have an account? ",
+                                style: TextStyle(color: Colors.white),
+                                children: [
+                                  TextSpan(
+                                    text: "Register",
+                                    style: TextStyle(
+                                      color: Color(0xffF2CE60),
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

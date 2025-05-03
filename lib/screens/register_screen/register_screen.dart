@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
+import 'package:cruze_control/screens/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -43,8 +45,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     border: Border.all(color: Colors.white.withOpacity(0.2)),
                   ),
                   child: Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -106,7 +108,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 20),
                         const Text(
                           'Password',
@@ -122,8 +123,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             obscureText: true,
                             style: TextStyle(color: Colors.white),
                             decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.key,
-                                  color: Color(0xffF2CE60)),
+                              prefixIcon:
+                                  Icon(Icons.key, color: Color(0xffF2CE60)),
                               hintText: 'Enter your password',
                               hintStyle: TextStyle(color: Colors.white60),
                               border: InputBorder.none,
@@ -133,14 +134,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-
-
                         const SizedBox(height: 40),
                         SizedBox(
                           width: double.infinity,
                           height: 60,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DashboardScreen()));
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xffF2CE60),
                               shape: RoundedRectangleBorder(
@@ -149,26 +153,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             child: const Text(
                               'Register',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 16),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
                             ),
                           ),
                         ),
                         const SizedBox(height: 30),
                         Center(
-                          child: RichText(
-                            text: const TextSpan(
-                              text: "Already have an account? ",
-                              style: TextStyle(color: Colors.white),
-                              children: [
-                                TextSpan(
-                                  text: "Login",
-                                  style: TextStyle(
-                                    color: Color(0xffF2CE60),
-                                    fontWeight: FontWeight.bold,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            },
+                            child: RichText(
+                              text: const TextSpan(
+                                text: "Already have an account? ",
+                                style: TextStyle(color: Colors.white),
+                                children: [
+                                  TextSpan(
+                                    text: "Login",
+                                    style: TextStyle(
+                                      color: Color(0xffF2CE60),
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
