@@ -56,10 +56,11 @@ class _StartButtonState extends State<StartButton> {
           SizedBox(
             height: 10,
 
+
           ),
-          
+
           Text( _ison? 'Bike Mode On' : 'Bike Mode Off',style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600,fontSize: 24,color: Color(0xff444444)),)
-          
+
         ],
       ),
     );

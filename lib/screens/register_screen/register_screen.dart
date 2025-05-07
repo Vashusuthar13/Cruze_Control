@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
