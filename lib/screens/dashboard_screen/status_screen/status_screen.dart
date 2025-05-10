@@ -1,3 +1,4 @@
+import 'package:cruze_control/_models/call_logs_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utills/widgets/call_logs_card/call_logs_card.dart';
@@ -11,7 +12,14 @@ class StatusScreen extends StatefulWidget {
 
 class _StatusScreenState extends State<StatusScreen> {
 
-  List<String> callLogs = ['+91 8003060293', '+91 9876543210'];
+
+  List<CallModel> callLogs = [
+    CallModel(icon: 'assets/svg_icons/user.svg', number: '+91 8003060293', time: '09:00', day: 'Today', onDelete: (){}),
+    CallModel(icon: 'assets/svg_icons/user.svg', number: '+91 8279060741', time: '12:00', day: 'Yesterday', onDelete: (){}),
+    CallModel(icon: 'assets/svg_icons/user.svg', number: '+91 8003060293', time: '09:00', day: 'Yesterday', onDelete: (){}),
+  ];
+
+
   int selectedIndex = 0;
 
   @override
@@ -108,12 +116,15 @@ class _StatusScreenState extends State<StatusScreen> {
                               );
                             });
                           },
-                          child: CallLogCard(
-                            phoneNumber: phone,
-                            time: '9:15',
-                            date: 'Yesterday',
-                            onDelete: () {}, // Not needed now but can be used for manual delete
-                          ),
+                          child: SizedBox(
+                            height: 90,
+                            child: ListView.builder(
+                                itemCount: callLogs.length,
+                                itemBuilder: (context, index) {
+                                  var item = callLogs[index];
+                              return CallLogCard(call: item,);
+                            }),
+                          )
                         );
                       },
                     ),

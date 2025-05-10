@@ -1,3 +1,4 @@
+import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -41,7 +42,7 @@ class _StartButtonState extends State<StartButton> {
                 shape: BoxShape.circle,
                 color: _ison? Color(0xffF2CE60) : Colors.transparent,
                 border: Border.all(
-                  color: Color(0xffF2CE60),
+                  color: AppColors.mainYellow,
                   width: 2
                 )
               ),

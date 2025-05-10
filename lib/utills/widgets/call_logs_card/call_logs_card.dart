@@ -1,31 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cruze_control/_models/call_logs_model.dart';
 
-class CallLogCard extends StatefulWidget {
-  final String phoneNumber;
-  final String time;
-  final String date;
-  final VoidCallback onDelete;
+class CallLogCard extends StatelessWidget {
+  final CallModel call;
 
-  const CallLogCard({
-    super.key,
-    required this.phoneNumber,
-    required this.time,
-    required this.date,
-    required this.onDelete,
-  });
-
-  @override
-  State<CallLogCard> createState() => _CallLogCardState();
-}
-
-class _CallLogCardState extends State<CallLogCard> {
+  const CallLogCard({super.key, required this.call});
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: ValueKey(widget.phoneNumber), // Unique key
-      direction: DismissDirection.endToStart, // Slide from right to left
+      key: ValueKey(call.icon),
+      direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
@@ -35,7 +21,7 @@ class _CallLogCardState extends State<CallLogCard> {
           child: const Icon(Icons.delete, color: Colors.white),
         ),
       ),
-      onDismissed: (direction) => widget.onDelete(),
+      onDismissed: (direction) => call.onDelete(),
       child: Container(
         width: double.infinity,
         height: 80,
@@ -51,12 +37,12 @@ class _CallLogCardState extends State<CallLogCard> {
               radius: 25,
               backgroundColor: Colors.white,
               child: SvgPicture.asset(
-                'assets/svg_icons/user.svg',
+                call.icon,
                 color: Colors.black,
               ),
             ),
             Text(
-              widget.phoneNumber,
+              call.number,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 16,
@@ -69,7 +55,7 @@ class _CallLogCardState extends State<CallLogCard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.time,
+                  call.time,
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 12,
@@ -77,7 +63,7 @@ class _CallLogCardState extends State<CallLogCard> {
                   ),
                 ),
                 Text(
-                  widget.date,
+                  call.day,
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 12,
