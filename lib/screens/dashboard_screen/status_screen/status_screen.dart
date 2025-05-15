@@ -1,7 +1,9 @@
 import 'package:cruze_control/_models/call_logs_model.dart';
+import 'package:cruze_control/utills/widgets/rides_status_card/ride_status_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utills/widgets/call_logs_card/call_logs_card.dart';
+import 'my_rides_screen/my_rides_screen.dart';
 
 class StatusScreen extends StatefulWidget {
   const StatusScreen({super.key});
@@ -88,7 +90,7 @@ class _StatusScreenState extends State<StatusScreen> {
                 children: [
                   // Page for 'Call Logs'
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     child: ListView.builder(
                       itemCount: callLogs.length,
                       itemBuilder: (context, index) {
@@ -99,8 +101,8 @@ class _StatusScreenState extends State<StatusScreen> {
                           direction: DismissDirection.endToStart,
                           background: Container(
                             alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 20),
-                            child: const CircleAvatar(
+                            padding:  EdgeInsets.only(right: 20),
+                            child:  CircleAvatar(
                               backgroundColor: Colors.red,
                               child: Icon(Icons.delete, color: Colors.white),
                             ),
@@ -119,6 +121,8 @@ class _StatusScreenState extends State<StatusScreen> {
                           child: SizedBox(
                             height: 90,
                             child: ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: false,
                                 itemCount: callLogs.length,
                                 itemBuilder: (context, index) {
                                   var item = callLogs[index];
@@ -129,14 +133,7 @@ class _StatusScreenState extends State<StatusScreen> {
                       },
                     ),
                   ),
-                  // Page for 'My Rides'
-                  Center(
-                    child: Container(// Background color for Call Logs page
-                      child: const Text(
-                        'This is the Rides Page.',style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
+                  MyRidesPage()
                 ],
               ),
             ),

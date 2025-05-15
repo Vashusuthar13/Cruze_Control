@@ -8,5 +8,6 @@ class AppColors {
   static Color mainGrey = Color(0xFF444444);
   static Color mainRed = Color(0xFFFF5E5E);
   static Color mainWhite = Color(0xFFFFFFFF);
+  static Color background = Color(0xff1F1F1F);
 
 }

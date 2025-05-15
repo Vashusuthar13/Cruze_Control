@@ -1,3 +1,4 @@
+import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cruze_control/_models/call_logs_model.dart';
@@ -17,8 +18,8 @@ class CallLogCard extends StatelessWidget {
         padding: const EdgeInsets.only(right: 20),
         child: CircleAvatar(
           radius: 25,
-          backgroundColor: Colors.red,
-          child: const Icon(Icons.delete, color: Colors.white),
+          backgroundColor: AppColors.lightGrey,
+          child: SvgPicture.asset('assets/svg_icons/delete_icon.svg'),
         ),
       ),
       onDismissed: (direction) => call.onDelete(),

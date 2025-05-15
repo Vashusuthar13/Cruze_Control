@@ -15,6 +15,7 @@ class _StartButtonState extends State<StartButton> {
   void _togglePower() {
     setState(() {
       _ison = !_ison;
+      showAnimatedDialog(context);
     });
   }
 
@@ -67,3 +68,89 @@ class _StartButtonState extends State<StartButton> {
     );
   }
 }
+
+class DiloageBox extends StatefulWidget {
+  const DiloageBox({super.key});
+
+  @override
+  State<DiloageBox> createState() => _DiloageBoxState();
+}
+
+class _DiloageBoxState extends State<DiloageBox> {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: AppColors.lightGrey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10)
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 20,horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Ride Safe!',style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.w600),),
+
+            SizedBox(
+              height: 20,
+            ),
+
+            Text(
+              textAlign: TextAlign.center,
+              'Please wear your hemate,\nwe wishes you a very safe journey✌️',style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400,),),
+
+            SizedBox(
+              height: 20,
+            ),
+
+
+            OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: AppColors.mainGrey,
+                  side: BorderSide(
+                    color: AppColors.mainYellow
+                  )
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+            }, child: Text('Okey! Thanks',style: TextStyle(color: AppColors.mainYellow),))
+
+          ],
+        ),
+      )
+    );
+  }
+}
+
+void showAnimatedDialog(BuildContext context) {
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: "Ride Safe Dialog",
+    barrierColor: Colors.black.withOpacity(0.5),
+    transitionDuration: const Duration(milliseconds: 300),
+    pageBuilder: (context, animation, secondaryAnimation) {
+      return Center(
+        child: DiloageBox(),
+      );
+    },
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      return ScaleTransition(
+        scale: CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+        ),
+        child: FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+      );
+    },
+  );
+}
+
+
+

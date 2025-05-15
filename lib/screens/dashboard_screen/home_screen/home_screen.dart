@@ -1,3 +1,4 @@
+import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -9,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xff1F1F1F),
+      color: AppColors.background,
       width: double.infinity,
       height: double.infinity,
       child: SingleChildScrollView(
