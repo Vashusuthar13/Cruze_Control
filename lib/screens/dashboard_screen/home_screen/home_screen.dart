@@ -1,11 +1,61 @@
+import 'dart:convert';
+
+import 'package:cruze_control/_models/weather_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../utills/widgets/on_off_button/on_off_button.dart';
+import 'package:geolocator/geolocator.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientMixin {
+  Future<WeatherModel>? weathermodel;
+  late String _currentLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    if (weathermodel == null) {
+      _getLocationAndFetchWeather();
+    };
+  }
+
+  void _getLocationAndFetchWeather() async {
+    try {
+      Position position = await _determinePosition();
+      setState(() {
+        _currentLocation = "${position.latitude},${position.longitude}";
+        weathermodel = weather(_currentLocation);
+      });
+    } catch (e) {
+      setState(() {
+        _currentLocation = "Error: ${e.toString()}";
+      });
+    }
+  }
+
+  Future<WeatherModel> weather(String location) async {
+    final response = await http.get(Uri.parse(
+      'http://api.weatherapi.com/v1/current.json?key=dd2bdb5aad2f43d1ae4121757251705&q=$location',
+    ));
+
+    if (response.statusCode == 200) {
+      return WeatherModel.fromJson(
+          jsonDecode(response.body) as Map<String, dynamic>);
+    } else {
+      throw Exception('Failed to load weather data');
+    }
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +67,6 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.only(top: 80, right: 20, left: 20),
         child: Column(
           children: [
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -36,35 +85,51 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(
                           width: 10,
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                    'assets/svg_icons/location.svg'),
-                                Text(
-                                  'Jaipur',
-                                  style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.white),
-                                )
-                              ],
-                            ),
-                            Text(
-                              '25°C, Cloudy',
-                              style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                            )
-                          ],
-                        )
+                        FutureBuilder<WeatherModel>(
+                          future: weathermodel,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    snapshot.data!.name.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  ),
+                                  Text(
+                                    snapshot.data!.tempC.toInt().toString() +
+                                        ', ' +
+                                        snapshot.data!.condition.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  )
+                                ],
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text(
+                                '${snapshot.error}',
+                                style: TextStyle(color: Colors.white),
+                              );
+                            }
+
+                            return Text('Loading..',style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),);
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -76,149 +141,184 @@ class HomeScreen extends StatelessWidget {
                 )
               ],
             ),
-
             SizedBox(
               height: 20,
             ),
-
             Container(
               width: 370,
               height: 180,
               decoration: BoxDecoration(
                   color: Color(0xff444444),
                   borderRadius: BorderRadius.circular(35)),
-
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Hunter 350', style: TextStyle(fontSize: 24, fontFamily: 'Inter', fontWeight: FontWeight.w700,color: Colors.white),),
-
+                    Text(
+                      'Hunter 350',
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
-                        Text('30kmpl', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Color(0xffEFEFEF)),),
-                        RichText(text:
-
-                        TextSpan(
-                            text: 'Total', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                            children: [
-
-                              TextSpan(
-
-                                  text: ' 255km',
-                                  style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Colors.white)
-                              )
-                            ]
-
-                        )
-
+                        Text(
+                          '30kmpl',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xffEFEFEF)),
                         ),
+                        RichText(
+                            text: TextSpan(
+                                text: 'Total',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white),
+                                children: [
+                              TextSpan(
+                                  text: ' 255km',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white))
+                            ])),
                       ],
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
-
                     Divider(
                       height: 0.1,
                       color: Color(0xff525252),
                     ),
-
                     SizedBox(
                       height: 10,
                     ),
-
-                    Text('Last Ride', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Colors.white) ),
-
+                    Text('Last Ride',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
                     SizedBox(
                       height: 10,
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
-                        RichText(text:
-
-                        TextSpan(
-                            text: 'Avg', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                            children: [
-
+                        RichText(
+                            text: TextSpan(
+                                text: 'Avg',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white),
+                                children: [
                               TextSpan(
-
                                   text: ' 26kmpl',
-                                  style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Color(0xffF2CE60))
-                              )
-                            ]
-
-                        )
-
-                        ),
-
-                        RichText(text:
-
-                        TextSpan(
-                            text: 'Distance', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                            children: [
-
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xffF2CE60)))
+                            ])),
+                        RichText(
+                            text: TextSpan(
+                                text: 'Distance',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white),
+                                children: [
                               TextSpan(
-
                                   text: ' 18km',
-                                  style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Color(0xffF2CE60))
-                              )
-                            ]
-
-                        )
-
-                        ),
-
-
-                        RichText(text:
-
-                        TextSpan(
-                            text: 'Speed', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
-                            children: [
-
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xffF2CE60)))
+                            ])),
+                        RichText(
+                            text: TextSpan(
+                                text: 'Speed',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white),
+                                children: [
                               TextSpan(
-
                                   text: ' 74km/h',
-                                  style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Color(0xffF2CE60))
-                              )
-                            ]
-
-                        )
-
-                        ),
-
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Inter',
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xffF2CE60)))
+                            ])),
                       ],
                     ),
                   ],
                 ),
               ),
             ),
-
             SizedBox(
               height: 50,
             ),
-
             StartButton(),
-
             Container(
               width: 300,
               height: 170,
-              child: Image.asset('assets/images/hunter.png',fit: BoxFit.fill,),
+              child: Image.asset(
+                'assets/images/hunter.png',
+                fit: BoxFit.fill,
+              ),
             )
-
-
-
           ],
         ),
       ),
     );
-
   }
+}
+
+Future<Position> _determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Check if location services are enabled
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled
+    throw Exception('Location services are disabled.');
+  }
+
+  // Check permission
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied
+      throw Exception('Location permissions are denied.');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are permanently denied
+    throw Exception('Location permissions are permanently denied.');
+  }
+
+  // When permissions are granted, get current position
+  return await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
+  );
 }

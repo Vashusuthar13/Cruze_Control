@@ -1,6 +1,7 @@
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 class StartButton extends StatefulWidget{
@@ -10,18 +11,23 @@ class StartButton extends StatefulWidget{
 }
 
 class _StartButtonState extends State<StartButton> {
+
+
+
   bool _ison = false;
 
   void _togglePower() {
     setState(() {
       _ison = !_ison;
-      showAnimatedDialog(context);
+
+      if(_ison){
+        showAnimatedDialog(context);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       child: Column(
         children: [
@@ -149,6 +155,39 @@ void showAnimatedDialog(BuildContext context) {
         ),
       );
     },
+  );
+}
+
+
+Future<Position> _determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Check if location services are enabled
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled
+    throw Exception('Location services are disabled.');
+  }
+
+  // Check permission
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied
+      throw Exception('Location permissions are denied.');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are permanently denied
+    throw Exception('Location permissions are permanently denied.');
+  }
+
+  // When permissions are granted, get current position
+  return await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
   );
 }
 
