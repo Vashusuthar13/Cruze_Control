@@ -1,8 +1,12 @@
 import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'controllers/call_logs_controller.dart';
 
 void main() {
+  Get.put(CallLogsController());
   runApp(const MyApp());
 }
 

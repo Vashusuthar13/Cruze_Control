@@ -39,6 +39,10 @@ dependencies:
   dropdown_button2: ^2.3.9
   http: ^1.4.0
   geolocator: ^14.0.0
+  phone_state: ^2.1.1
+  another_telephony: ^0.4.1
+  permission_handler: ^12.0.0+1
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

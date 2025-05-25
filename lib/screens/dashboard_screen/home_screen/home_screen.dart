@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:phone_state/phone_state.dart';
 import 'package:cruze_control/_models/weather_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +7,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import '../../../utills/widgets/on_off_button/on_off_button.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+
+
+
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +22,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientMixin {
+
+
+
+  Future<bool> requestPermission() async {
+    var status = await Permission.phone.request();
+
+    return switch (status) {
+      PermissionStatus.denied ||
+      PermissionStatus.restricted ||
+      PermissionStatus.limited ||
+      PermissionStatus.permanentlyDenied =>
+      false,
+      PermissionStatus.provisional || PermissionStatus.granted => true,
+    };
+  }
+
+
+
+
+
+
   Future<WeatherModel>? weathermodel;
   late String _currentLocation;
 
@@ -105,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                                         color: Colors.white),
                                   ),
                                   Text(
-                                    snapshot.data!.tempC.toInt().toString() +
+                                    snapshot.data!.tempC.toInt().toString() + '°c'+
                                         ', ' +
                                         snapshot.data!.condition.toString(),
                                     style: TextStyle(

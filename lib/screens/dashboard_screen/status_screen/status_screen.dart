@@ -1,7 +1,8 @@
 import 'package:cruze_control/_models/call_logs_model.dart';
+import 'package:cruze_control/controllers/call_logs_controller.dart';
 import 'package:cruze_control/utills/widgets/rides_status_card/ride_status_card.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../../../utills/widgets/call_logs_card/call_logs_card.dart';
 import 'my_rides_screen/my_rides_screen.dart';
 
@@ -14,13 +15,7 @@ class StatusScreen extends StatefulWidget {
 
 class _StatusScreenState extends State<StatusScreen> {
 
-
-  List<CallModel> callLogs = [
-    CallModel(icon: 'assets/svg_icons/user.svg', number: '+91 8003060293', time: '09:00', day: 'Today', onDelete: (){}),
-    CallModel(icon: 'assets/svg_icons/user.svg', number: '+91 8279060741', time: '12:00', day: 'Yesterday', onDelete: (){}),
-    CallModel(icon: 'assets/svg_icons/user.svg', number: '+91 8003060293', time: '09:00', day: 'Yesterday', onDelete: (){}),
-  ];
-
+  final CallLogsController callLogsController = Get.find();
 
   int selectedIndex = 0;
 
@@ -91,47 +86,29 @@ class _StatusScreenState extends State<StatusScreen> {
                   // Page for 'Call Logs'
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: ListView.builder(
-                      itemCount: callLogs.length,
+                    child: Obx(() => ListView.builder(
+                      itemCount: callLogsController.callLogs.length,
                       itemBuilder: (context, index) {
-                        final phone = callLogs[index];
+                        final item = callLogsController.callLogs[index];
 
                         return Dismissible(
-                          key: ValueKey(phone),
+                          key: ValueKey(item.number + item.time),
                           direction: DismissDirection.endToStart,
                           background: Container(
                             alignment: Alignment.centerRight,
-                            padding:  EdgeInsets.only(right: 20),
-                            child:  CircleAvatar(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: const CircleAvatar(
                               backgroundColor: Colors.red,
                               child: Icon(Icons.delete, color: Colors.white),
                             ),
                           ),
                           onDismissed: (direction) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              setState(() {
-                                callLogs.removeAt(index);
-                              });
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('$phone deleted')),
-                              );
-                            });
+                            callLogsController.deleteCall(index);
                           },
-                          child: SizedBox(
-                            height: 90,
-                            child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: false,
-                                itemCount: callLogs.length,
-                                itemBuilder: (context, index) {
-                                  var item = callLogs[index];
-                              return CallLogCard(call: item,);
-                            }),
-                          )
+                          child: CallLogCard(call: item),
                         );
                       },
-                    ),
+                    ))
                   ),
                   MyRidesPage()
                 ],
