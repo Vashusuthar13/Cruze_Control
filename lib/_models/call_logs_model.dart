@@ -5,13 +5,20 @@ class CallModel {
   final String number;
   final String time;
   final String day;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
 
   CallModel({
     required this.icon,
     required this.number,
     required this.time,
     required this.day,
-    required this.onDelete,
+    this.onDelete,
   });
+
+  Map<String, dynamic> toJson() => {
+    'icon': icon,
+    'number': number,
+    'time': time,
+    'day': day,
+  };
 }

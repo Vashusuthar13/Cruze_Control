@@ -2,10 +2,14 @@ import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'controllers/call_logs_controller.dart';
+import 'controllers/start_button_controller.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  Get.put(StartButtonController());
   Get.put(CallLogsController());
   runApp(const MyApp());
 }

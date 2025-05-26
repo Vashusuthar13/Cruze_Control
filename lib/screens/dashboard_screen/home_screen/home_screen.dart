@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:phone_state/phone_state.dart';
 import 'package:cruze_control/_models/weather_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +8,6 @@ import '../../../utills/widgets/on_off_button/on_off_button.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
-
-
-
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -21,10 +15,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientMixin {
-
-
-
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   Future<bool> requestPermission() async {
     var status = await Permission.phone.request();
 
@@ -33,15 +25,10 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
       PermissionStatus.restricted ||
       PermissionStatus.limited ||
       PermissionStatus.permanentlyDenied =>
-      false,
+        false,
       PermissionStatus.provisional || PermissionStatus.granted => true,
     };
   }
-
-
-
-
-
 
   Future<WeatherModel>? weathermodel;
   late String _currentLocation;
@@ -51,7 +38,8 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
     super.initState();
     if (weathermodel == null) {
       _getLocationAndFetchWeather();
-    };
+    }
+    ;
   }
 
   void _getLocationAndFetchWeather() async {
@@ -86,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       color: AppColors.background,
       width: double.infinity,
@@ -109,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SvgPicture.asset('assets/svg_icons/Vector.svg'),
-                        SizedBox(
+                        const  SizedBox(
                           width: 10,
                         ),
                         FutureBuilder<WeatherModel>(
@@ -120,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
+                                  const  SizedBox(
                                     width: 5,
                                   ),
                                   Text(
@@ -132,7 +121,8 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                                         color: Colors.white),
                                   ),
                                   Text(
-                                    snapshot.data!.tempC.toInt().toString() + '°c'+
+                                    snapshot.data!.tempC.toInt().toString() +
+                                        '°c' +
                                         ', ' +
                                         snapshot.data!.condition.toString(),
                                     style: TextStyle(
@@ -150,11 +140,14 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                               );
                             }
 
-                            return Text('Loading..',style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white),);
+                            return const Text(
+                              'Loading..',
+                              style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            );
                           },
                         ),
                       ],
@@ -168,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                 )
               ],
             ),
-            SizedBox(
+            const  SizedBox(
               height: 20,
             ),
             Container(
@@ -182,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const   Text(
                       'Hunter 350',
                       style: TextStyle(
                           fontSize: 24,
@@ -190,10 +183,10 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                           fontWeight: FontWeight.w700,
                           color: Colors.white),
                     ),
-                    Row(
+                       Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const   Text(
                           '30kmpl',
                           style: TextStyle(
                               fontSize: 15,
@@ -201,8 +194,8 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                               fontWeight: FontWeight.w300,
                               color: Color(0xffEFEFEF)),
                         ),
-                        RichText(
-                            text: TextSpan(
+                          RichText(
+                            text: const TextSpan(
                                 text: 'Total',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -220,30 +213,30 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                             ])),
                       ],
                     ),
-                    SizedBox(
+                    const  SizedBox(
                       height: 20,
                     ),
-                    Divider(
+                    const  Divider(
                       height: 0.1,
                       color: Color(0xff525252),
                     ),
-                    SizedBox(
+                  const  SizedBox(
                       height: 10,
                     ),
-                    Text('Last Ride',
+                    const  Text('Last Ride',
                         style: TextStyle(
                             fontSize: 15,
                             fontFamily: 'Inter',
                             fontWeight: FontWeight.w600,
                             color: Colors.white)),
-                    SizedBox(
+                    const  SizedBox(
                       height: 10,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RichText(
-                            text: TextSpan(
+                            text: const TextSpan(
                                 text: 'Avg',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -260,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                                       color: Color(0xffF2CE60)))
                             ])),
                         RichText(
-                            text: TextSpan(
+                            text: const TextSpan(
                                 text: 'Distance',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -277,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                                       color: Color(0xffF2CE60)))
                             ])),
                         RichText(
-                            text: TextSpan(
+                            text: const TextSpan(
                                 text: 'Speed',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -299,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen>  with AutomaticKeepAliveClientM
                 ),
               ),
             ),
-            SizedBox(
+            const   SizedBox(
               height: 50,
             ),
             StartButton(),

@@ -22,7 +22,7 @@ class CallLogCard extends StatelessWidget {
           child: SvgPicture.asset('assets/svg_icons/delete_icon.svg'),
         ),
       ),
-      onDismissed: (direction) => call.onDelete(),
+      onDismissed: (direction) => call.onDelete!(),
       child: Container(
         width: double.infinity,
         height: 80,

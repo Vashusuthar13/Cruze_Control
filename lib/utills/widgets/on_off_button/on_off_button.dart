@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cruze_control/_models/call_logs_model.dart';
 import 'package:cruze_control/controllers/call_logs_controller.dart';
+import 'package:cruze_control/controllers/start_button_controller.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,38 +11,79 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:phone_state/phone_state.dart';
 
-
-class StartButton extends StatefulWidget{
-
+class StartButton extends StatefulWidget {
   @override
   State<StartButton> createState() => _StartButtonState();
 }
 
 class _StartButtonState extends State<StartButton> {
-
-
+  final StartButtonController controller = Get.find();
+  final CallLogsController callLogsController = Get.find();
   final Telephony telephony = Telephony.instance;
 
+  Stream<PhoneState>? _phoneStateStream;
+  StreamSubscription<PhoneState>? _phoneStateSubscription;
+
+  final String customMessage = "I'm riding my bike, will call you back later.";
 
   Future<bool> requestPermission() async {
     var phoneStatus = await Permission.phone.request();
     var smsStatus = await Permission.sms.request();
-
     return phoneStatus.isGranted && smsStatus.isGranted;
   }
 
-
-
   void _handleIncomingCall(String number) async {
-    await telephony.sendSms(
-      to: number,
-      message: customMessage,
-    );
+   try {
+     await telephony.sendSms(
+       to: number,
+       message: customMessage,
+     );
+   }
+   catch (e){
+     print('$e');
+   }
+
+    callLogsController.addCall(CallModel(
+      icon: 'assets/svg_icons/user.svg',
+      number: number,
+      time: getCurrentTime(),
+      day: getCurrentDay(),
+      onDelete: () {},
+    ));
   }
 
-  Stream<PhoneState>? _phoneStateStream;
-  StreamSubscription<PhoneState>? _phoneStateSubscription;
-  final String customMessage = "I'm riding my bike, will call you back later.";
+  void _togglePower() async {
+    if (controller.isOn.value) {
+      // TURN OFF
+      await _phoneStateSubscription?.cancel();
+      _phoneStateSubscription = null;
+      _phoneStateStream = null;
+      controller.turnOff();
+    } else {
+      // TURN ON
+      bool granted = await requestPermission();
+      if (!granted) return;
+
+      _phoneStateStream = PhoneState.stream;
+      _phoneStateSubscription = _phoneStateStream!.listen((PhoneState state) {
+
+
+        try {
+          if (state.status == PhoneStateStatus.CALL_INCOMING &&
+              state.number != null) {
+            print("PhoneState: ${state.status} from ${state.number}");
+            _handleIncomingCall(state.number!);
+          }
+        } catch (e) {
+          print('$e');
+        }
+      });
+
+      controller.turnOn();
+      showAnimatedDialog(context);
+    }
+  }
+
   String getCurrentTime() {
     final now = DateTime.now();
     return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
@@ -51,19 +93,13 @@ class _StartButtonState extends State<StartButton> {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(Duration(days: 1));
-
     if (now.year == today.year &&
         now.month == today.month &&
-        now.day == today.day) {
-      return "Today";
-    } else if (now.year == yesterday.year &&
+        now.day == today.day) return "Today";
+    if (now.year == yesterday.year &&
         now.month == yesterday.month &&
-        now.day == yesterday.day) {
-      return "Yesterday";
-    } else {
-      // Return formatted date like "May 24"
-      return "${_getMonthName(now.month)} ${now.day}";
-    }
+        now.day == yesterday.day) return "Yesterday";
+    return "${_getMonthName(now.month)} ${now.day}";
   }
 
   String _getMonthName(int month) {
@@ -74,100 +110,65 @@ class _StartButtonState extends State<StartButton> {
     return months[month - 1];
   }
 
-
-  bool _ison = false;
-
-  void _togglePower() async {
-    setState(() {
-      _ison = !_ison;
-    });
-
-    if (_ison) {
-      // Request permissions
-      bool granted = await requestPermission();
-      if (!granted) return;
-
-      // Initialize the phone state stream
-      _phoneStateStream = PhoneState.stream;
-
-      // Start listening to incoming calls
-      _phoneStateSubscription = _phoneStateStream!.listen((PhoneState state) {
-        if (state.status == PhoneStateStatus.CALL_INCOMING && state.number != null) {
-          String callerNumber = state.number!;
-
-          _handleIncomingCall(callerNumber); // Send SMS
-
-          // Add to GetX-managed call log
-          Get.find<CallLogsController>().addCall(CallModel(
-            icon: 'assets/svg_icons/user.svg',
-            number: callerNumber,
-            time: getCurrentTime(),
-            day: getCurrentDay(),
-            onDelete: () {}, // Optional: add real logic later
-          ));
-        }
-      });
-
-      showAnimatedDialog(context);
-    } else {
-      // Stop listening when bike mode is off
-      await _phoneStateSubscription?.cancel();
-      _phoneStateSubscription = null;
-      _phoneStateStream = null;
-    }
+  @override
+  void dispose() {
+    _phoneStateSubscription?.cancel();
+    super.dispose();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
+    return Obx(() {
+      final isOn = controller.isOn.value;
+
+      return Column(
         children: [
           GestureDetector(
             onTap: _togglePower,
             child: Container(
               width: 150,
               height: 150,
-
               decoration: BoxDecoration(
-                  boxShadow: [
+                boxShadow: [
+                  if (isOn)
                     BoxShadow(
-                      color:  _ison ? Color(0xffF2CE60).withOpacity(0.2) : Colors.transparent,
+                      color: Color(0xffF2CE60).withOpacity(0.2),
                       spreadRadius: 5,
                       blurRadius: 10,
-                      offset: Offset(0, 4), // shadow position
+                      offset: Offset(0, 4),
                     ),
-                  ],
+                ],
                 shape: BoxShape.circle,
-                color: _ison? Color(0xffF2CE60) : Colors.transparent,
+                color: isOn ? Color(0xffF2CE60) : Colors.transparent,
                 border: Border.all(
                   color: AppColors.mainYellow,
-                  width: 2
-                )
+                  width: 2,
+                ),
               ),
-              child: Container(
-                  width: 40,
-                  height: 40,
-                  child: Center(child: SvgPicture.asset('assets/svg_icons/powerbtn.svg',color: _ison? Color(0xff1F1F1F) : Color(0xffF2CE60),))),
-
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/svg_icons/powerbtn.svg',
+                  color: isOn ? Color(0xff1F1F1F) : Color(0xffF2CE60),
+                ),
+              ),
             ),
           ),
-
-          SizedBox(
-            height: 10,
-
-
-          ),
-
-          Text( _ison? 'Bike Mode On' : 'Bike Mode Off',style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600,fontSize: 24,color: Color(0xff444444)),)
-
+          const SizedBox(height: 10),
+          Text(
+            isOn ? 'Bike Mode On' : 'Bike Mode Off',
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+              fontSize: 24,
+              color: Color(0xff444444),
+            ),
+          )
         ],
-      ),
-    );
+      );
+    });
   }
 }
+
 
 class DiloageBox extends StatefulWidget {
   const DiloageBox({super.key});
