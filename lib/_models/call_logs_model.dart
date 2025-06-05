@@ -6,6 +6,7 @@ class CallModel {
   final String time;
   final String day;
   final VoidCallback? onDelete;
+  final String? key;
 
   CallModel({
     required this.icon,
@@ -13,7 +14,18 @@ class CallModel {
     required this.time,
     required this.day,
     this.onDelete,
+    this.key
   });
+
+  factory CallModel.fromJson(Map<String, dynamic> json,String key) {
+    return CallModel(
+      day: json['day'],
+      icon: json['icon'],
+      number: json['number'] ?? '',
+      time: json['time'] ?? '',
+      key: key,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     'icon': icon,

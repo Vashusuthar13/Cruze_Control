@@ -1,33 +1,38 @@
 import 'dart:ui';
-
+import 'package:get/get.dart';
 import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
+import 'package:cruze_control/screens/login_screen/controller/login_controller.dart';
 import 'package:cruze_control/screens/register_screen/register_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../forgot_password/forgot_password.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+
+  final LoginController controller = Get.put(LoginController());
+
+
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent, // Let background image show
+      backgroundColor: Colors.transparent,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Background image
+
           Image.asset(
-            'assets/images/backgroundbike.jpg', // Replace with your image file path
+            'assets/images/backgroundbike.jpg',
             fit: BoxFit.cover,
           ),
 
-          // Optional dark overlay
+
           Container(
             color: Colors.black.withOpacity(0.6),
           ),
 
-          // Login form container
+
           Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
@@ -63,9 +68,10 @@ class LoginScreen extends StatelessWidget {
                             border: Border.all(color: Color(0xffF2CE60)),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const TextField(
+                          child:  TextFormField(
+                            controller: controller.emailController,
                             style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               prefixIcon: Icon(
                                 Icons.email_outlined,
                                 color: Color(0xffF2CE60),
@@ -90,10 +96,11 @@ class LoginScreen extends StatelessWidget {
                             border: Border.all(color: Color(0xffF2CE60)),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const TextField(
+                          child: TextFormField(
+                            controller: controller.passwordController,
                             obscureText: true,
                             style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.key,
                                   color: Color(0xffF2CE60)),
                               hintText: 'Enter your password',
@@ -123,22 +130,23 @@ class LoginScreen extends StatelessWidget {
                           width: double.infinity,
                           height: 60,
                           child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-                            },
+                            onPressed: () => Get.find<LoginController>().loginUser(),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xffF2CE60),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
+                            child: Obx(() => controller.isLoading.value ? CircularProgressIndicator(color: Colors.white,) : Text(
                               'Login',
                               style: TextStyle(
                                   color: Colors.black, fontSize: 16),
                             ),
                           ),
                         ),
+                        ),
+
+
                         const SizedBox(height: 20),
                         Center(
                           child: GestureDetector(

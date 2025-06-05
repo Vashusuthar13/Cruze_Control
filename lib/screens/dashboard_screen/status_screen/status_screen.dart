@@ -1,6 +1,4 @@
-import 'package:cruze_control/_models/call_logs_model.dart';
 import 'package:cruze_control/controllers/call_logs_controller.dart';
-import 'package:cruze_control/utills/widgets/rides_status_card/ride_status_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utills/widgets/call_logs_card/call_logs_card.dart';
@@ -51,7 +49,7 @@ class _StatusScreenState extends State<StatusScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          minimumSize: Size(0, 60),
+                          minimumSize: const Size(0, 60),
                           backgroundColor: Colors.transparent,
                         ),
                         onPressed: () {
@@ -81,11 +79,10 @@ class _StatusScreenState extends State<StatusScreen> {
             ),
             Expanded(
               child: IndexedStack(
-                index: selectedIndex, // Determines which page is shown
+                index: selectedIndex,
                 children: [
-                  // Page for 'Call Logs'
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Obx(() => ListView.builder(
                       itemCount: callLogsController.callLogs.length,
                       itemBuilder: (context, index) {

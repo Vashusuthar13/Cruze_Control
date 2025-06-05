@@ -28,7 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  int _selectedIndex = 1; // Default to Home
+  int _selectedIndex = 1;
 
   final List<Widget> _screens = [
     StatusScreen(),

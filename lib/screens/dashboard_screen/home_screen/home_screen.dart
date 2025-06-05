@@ -39,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen>
     if (weathermodel == null) {
       _getLocationAndFetchWeather();
     }
-    ;
   }
 
   void _getLocationAndFetchWeather() async {
@@ -90,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen>
                   width: 170,
                   height: 65,
                   decoration: BoxDecoration(
-                      color: Color(0xff444444),
+                      color: const Color(0xff444444),
                       borderRadius: BorderRadius.circular(35)),
                   child: Center(
                     child: Row(
@@ -114,18 +113,15 @@ class _HomeScreenState extends State<HomeScreen>
                                   ),
                                   Text(
                                     snapshot.data!.name.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white),
                                   ),
                                   Text(
-                                    snapshot.data!.tempC.toInt().toString() +
-                                        '°c' +
-                                        ', ' +
-                                        snapshot.data!.condition.toString(),
-                                    style: TextStyle(
+                                    '${snapshot.data!.tempC.toInt()}°c, ${snapshot.data!.condition}',
+                                    style: const TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
@@ -136,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen>
                             } else if (snapshot.hasError) {
                               return Text(
                                 '${snapshot.error}',
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               );
                             }
 
@@ -156,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 CircleAvatar(
                   radius: 27.5,
-                  backgroundColor: Color(0xff444444),
+                  backgroundColor: const Color(0xff444444),
                   child: SvgPicture.asset('assets/svg_icons/user.svg'),
                 )
               ],
@@ -168,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen>
               width: 370,
               height: 180,
               decoration: BoxDecoration(
-                  color: Color(0xff444444),
+                  color: const Color(0xff444444),
                   borderRadius: BorderRadius.circular(35)),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -296,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen>
               height: 50,
             ),
             StartButton(),
-            Container(
+            SizedBox(
               width: 300,
               height: 170,
               child: Image.asset(

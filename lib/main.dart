@@ -1,4 +1,5 @@
 import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
+import 'package:cruze_control/screens/register_screen/controller/register_controller.dart';
 import 'package:cruze_control/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,16 +12,17 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Get.put(StartButtonController());
   Get.put(CallLogsController());
+  Get.put(RegisterController());
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
         fontFamily: 'Inter'
       ),

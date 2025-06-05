@@ -1,36 +1,61 @@
 import 'package:get/get.dart';
-import 'package:firebase_database/firebase_database.dart';
 import '../../_models/call_logs_model.dart';
 import '../service/firebase_service.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class CallLogsController extends GetxController {
   final callLogs = <CallModel>[].obs;
   final database = FirebaseService.database.ref();
 
-  void addCall(CallModel call) {
-    callLogs.add(call);
+  @override
+  void onInit() {
+    super.onInit();
+    fetchCallLogs();
+  }
 
-    // Upload only serializable data to Firebase
-
+  void fetchCallLogs() async {
     try {
-      database.child('call_logs').push().set(call.toJson());
-      print("Uploaded to Firebase");
+      DatabaseEvent event = await database.child('call_logs').once();
 
+      if (event.snapshot.value != null) {
+        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+
+        final logs = data.entries.map((entry) {
+          final value = Map<String, dynamic>.from(entry.value);
+          return CallModel.fromJson(value, entry.key);
+        }).toList();
+
+        callLogs.assignAll(logs);
+      } else {
+        callLogs.clear();
+      }
+    } catch (e) {
+      print('Error fetching call logs: $e');
     }
-    catch(e){
+  }
+
+
+  void addCall(CallModel call) async {
+    try {
+      await database.child('call_logs').push().set(call.toJson());
+      callLogs.add(call);
+      print("Uploaded to Firebase and added locally");
+    } catch (e) {
       print("Firebase upload failed: $e");
     }
   }
 
   void deleteCall(int index) {
-    callLogs.removeAt(index);
-    // Optionally remove from Firebase if you store the key
-  }
+    final call = callLogs[index];
+    final key = call.key;
 
+    if (key != null) {
+      database.child('call_logs').child(key).remove();
+    }
+    callLogs.removeAt(index);
+  }
   void clearAllCalls() {
     callLogs.clear();
-    // Optional: database.child('call_logs').remove();
+
   }
 }
-
-
