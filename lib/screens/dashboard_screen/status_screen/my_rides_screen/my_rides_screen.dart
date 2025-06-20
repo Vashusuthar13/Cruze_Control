@@ -1,9 +1,6 @@
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
-import 'package:cruze_control/utills/widgets/call_logs_card/call_logs_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/widgets.dart';
 import '../../../../utills/widgets/rides_status_card/ride_status_card.dart';
 
 class MyRidesPage extends StatelessWidget {
@@ -24,9 +21,9 @@ class MyRidesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xff1F1F1F),
+        backgroundColor: const Color(0xff1F1F1F),
         body: Padding(
-          padding:  EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
               Row(
@@ -35,16 +32,16 @@ class MyRidesPage extends StatelessWidget {
                     child: DropdownButtonFormField2<String>(
                       items: vechileList
                           .map((item) => DropdownMenuItem<String>(
-                          value: item, child: Text(item,style: TextStyle(color: Colors.white70),)))
+                          value: item, child: Text(item,style:  const TextStyle(color: Colors.white70),)))
                           .toList(),
-                      hint: Text(
+                      hint: const Text(
                         'Select Vechile',
                         style: TextStyle(color: Colors.white),
                       ),
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color: Colors.grey,
                             )
                         ),
@@ -82,7 +79,7 @@ class MyRidesPage extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
 
@@ -90,16 +87,16 @@ class MyRidesPage extends StatelessWidget {
                     child: DropdownButtonFormField2<String>(
                       items: typeList
                           .map((item) => DropdownMenuItem<String>(
-                              value: item, child: Text(item,style: TextStyle(color: Colors.white70),)))
+                              value: item, child: Text(item,style: const TextStyle(color: Colors.white70),)))
                           .toList(),
-                      hint: Text(
+                      hint: const Text(
                         'Select Type',
                         style: TextStyle(color: Colors.white),
                       ),
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.grey,
                           )
                         ),
@@ -139,13 +136,13 @@ class MyRidesPage extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(
+            const SizedBox(
                 height: 30,
               ),
 
 
               RideStatusCard(),
-              SizedBox(
+              const  SizedBox(
                 height: 20,
               ),
               RideStatusCard(),

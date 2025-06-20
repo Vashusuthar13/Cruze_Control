@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 class LoginController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   var isLoading = false.obs;
 
   void loginUser() async {
     isLoading.value = true;
+
 
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -70,3 +70,4 @@ class LoginController extends GetxController {
     super.onClose();
   }
 }
+

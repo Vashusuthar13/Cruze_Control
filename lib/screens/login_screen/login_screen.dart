@@ -1,11 +1,8 @@
 import 'dart:ui';
 import 'package:get/get.dart';
-import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/login_screen/controller/login_controller.dart';
 import 'package:cruze_control/screens/register_screen/register_screen.dart';
 import 'package:flutter/material.dart';
-
-import '../forgot_password/forgot_password.dart';
 
 class LoginScreen extends StatelessWidget {
 
@@ -117,7 +114,7 @@ class LoginScreen extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
+                              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
                             },
                             child: const Text(
                               'Forgot password?',
@@ -137,7 +134,7 @@ class LoginScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Obx(() => controller.isLoading.value ? CircularProgressIndicator(color: Colors.white,) : Text(
+                            child: Obx(() => controller.isLoading.value ? CircularProgressIndicator(color: Colors.white,) : const Text(
                               'Login',
                               style: TextStyle(
                                   color: Colors.black, fontSize: 16),

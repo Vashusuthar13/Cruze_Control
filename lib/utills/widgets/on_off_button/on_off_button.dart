@@ -12,6 +12,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:phone_state/phone_state.dart';
 
 class StartButton extends StatefulWidget {
+  const StartButton({super.key});
+
   @override
   State<StartButton> createState() => _StartButtonState();
 }
@@ -53,14 +55,13 @@ class _StartButtonState extends State<StartButton> {
   }
 
   void _togglePower() async {
+
     if (controller.isOn.value) {
-      // TURN OFF
       await _phoneStateSubscription?.cancel();
       _phoneStateSubscription = null;
       _phoneStateStream = null;
       controller.turnOff();
     } else {
-      // TURN ON
       bool granted = await requestPermission();
       if (!granted) return;
 
@@ -132,14 +133,14 @@ class _StartButtonState extends State<StartButton> {
                 boxShadow: [
                   if (isOn)
                     BoxShadow(
-                      color: Color(0xffF2CE60).withOpacity(0.2),
+                      color: const Color(0xffF2CE60).withOpacity(0.2),
                       spreadRadius: 5,
                       blurRadius: 10,
-                      offset: Offset(0, 4),
+                      offset: const Offset(0, 4),
                     ),
                 ],
                 shape: BoxShape.circle,
-                color: isOn ? Color(0xffF2CE60) : Colors.transparent,
+                color: isOn ? const Color(0xffF2CE60) : Colors.transparent,
                 border: Border.all(
                   color: AppColors.mainYellow,
                   width: 2,
@@ -148,7 +149,7 @@ class _StartButtonState extends State<StartButton> {
               child: Center(
                 child: SvgPicture.asset(
                   'assets/svg_icons/powerbtn.svg',
-                  color: isOn ? Color(0xff1F1F1F) : Color(0xffF2CE60),
+                  color: isOn ? const Color(0xff1F1F1F) : Color(0xffF2CE60),
                 ),
               ),
             ),
@@ -195,15 +196,15 @@ class _DiloageBoxState extends State<DiloageBox> {
           children: [
             Text('Ride Safe!',style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.w600),),
 
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
 
-            Text(
+            const Text(
               textAlign: TextAlign.center,
               'Please wear your hemate,\nwe wishes you a very safe journey✌️',style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.w400,),),
 
-            SizedBox(
+            const  SizedBox(
               height: 20,
             ),
 
@@ -234,7 +235,7 @@ void showAnimatedDialog(BuildContext context) {
     barrierColor: Colors.black.withOpacity(0.5),
     transitionDuration: const Duration(milliseconds: 300),
     pageBuilder: (context, animation, secondaryAnimation) {
-      return Center(
+      return const Center(
         child: DiloageBox(),
       );
     },
@@ -258,29 +259,29 @@ Future<Position> _determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
 
-  // Check if location services are enabled
+
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    // Location services are not enabled
+
     throw Exception('Location services are disabled.');
   }
 
-  // Check permission
+
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      // Permissions are denied
+
       throw Exception('Location permissions are denied.');
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    // Permissions are permanently denied
+
     throw Exception('Location permissions are permanently denied.');
   }
 
-  // When permissions are granted, get current position
+
   return await Geolocator.getCurrentPosition(
     desiredAccuracy: LocationAccuracy.high,
   );

@@ -22,7 +22,7 @@ class RideStatusCard extends StatelessWidget {
                 Text('1 Hour 34 Minutes', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Color(0xffEFEFEF)),),
                 RichText(text:
 
-                TextSpan(
+                const TextSpan(
                     text: 'Distance', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
                     children: [
 
@@ -39,22 +39,22 @@ class RideStatusCard extends StatelessWidget {
               ],
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
 
-            Divider(
+           const Divider(
               height: 0.1,
               color: Color(0xff525252),
             ),
 
-            SizedBox(
+           const SizedBox(
               height: 10,
             ),
 
-            Text('Ride Details', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Colors.white) ),
+            const   Text('Ride Details', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w600,color: Colors.white) ),
 
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
@@ -64,7 +64,7 @@ class RideStatusCard extends StatelessWidget {
 
                 RichText(text:
 
-                TextSpan(
+                const  TextSpan(
                     text: 'Avg', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
                     children: [
 
@@ -81,7 +81,7 @@ class RideStatusCard extends StatelessWidget {
 
                 RichText(text:
 
-                TextSpan(
+                const  TextSpan(
                     text: 'Top', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
                     children: [
 
@@ -99,7 +99,7 @@ class RideStatusCard extends StatelessWidget {
 
                 RichText(text:
 
-                TextSpan(
+                const  TextSpan(
                     text: 'Avg', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),
                     children: [
 
@@ -116,16 +116,16 @@ class RideStatusCard extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 10,),
+            const  SizedBox(height: 10,),
 
-            Divider(
+            const  Divider(
               height: 0.1,
               color: Color(0xff525252),
             ),
 
-            SizedBox(height: 5,),
+            const  SizedBox(height: 5,),
 
-            Row(
+            const  Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('12 May 2025', style: TextStyle(fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w300,color: Colors.white),),
