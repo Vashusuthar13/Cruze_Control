@@ -1,7 +1,7 @@
+import 'package:cruze_control/models/call_logs_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:cruze_control/_models/call_logs_model.dart';
 
 class CallLogCard extends StatelessWidget {
   final CallModel call;

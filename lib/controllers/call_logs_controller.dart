@@ -1,5 +1,5 @@
+import 'package:cruze_control/models/call_logs_model.dart';
 import 'package:get/get.dart';
-import '../../_models/call_logs_model.dart';
 import '../service/firebase_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 

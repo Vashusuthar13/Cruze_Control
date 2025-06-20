@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:cruze_control/_models/weather_model.dart';
+import 'package:cruze_control/models/weather_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
