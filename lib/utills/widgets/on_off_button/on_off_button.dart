@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cruze_control/controllers/call_logs_controller.dart';
+import 'package:cruze_control/controllers/location_track_conrtoller.dart';
 import 'package:cruze_control/controllers/start_button_controller.dart';
 import 'package:cruze_control/models/call_logs_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
@@ -19,6 +20,8 @@ class StartButton extends StatefulWidget {
 }
 
 class _StartButtonState extends State<StartButton> {
+
+  final LocationController locationTrackingController = Get.put(LocationController());
   final StartButtonController controller = Get.find();
   final CallLogsController callLogsController = Get.find();
   final Telephony telephony = Telephony.instance;
@@ -55,23 +58,21 @@ class _StartButtonState extends State<StartButton> {
   }
 
   void _togglePower() async {
-
     if (controller.isOn.value) {
       await _phoneStateSubscription?.cancel();
       _phoneStateSubscription = null;
       _phoneStateStream = null;
       controller.turnOff();
+
+      locationTrackingController.stopTracking(); // Stop tracking
     } else {
       bool granted = await requestPermission();
       if (!granted) return;
 
       _phoneStateStream = PhoneState.stream;
       _phoneStateSubscription = _phoneStateStream!.listen((PhoneState state) {
-
-
         try {
-          if (state.status == PhoneStateStatus.CALL_INCOMING &&
-              state.number != null) {
+          if (state.status == PhoneStateStatus.CALL_INCOMING && state.number != null) {
             print("PhoneState: ${state.status} from ${state.number}");
             _handleIncomingCall(state.number!);
           }
@@ -81,6 +82,7 @@ class _StartButtonState extends State<StartButton> {
       });
 
       controller.turnOn();
+      locationTrackingController.startTracking(); // Start tracking
       showAnimatedDialog(context);
     }
   }
