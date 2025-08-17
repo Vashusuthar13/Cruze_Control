@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen>
       });
     } catch (e) {
       setState(() {
-        _currentLocation = "Error: ${e.toString()}";
+        _currentLocation = "Errors: ${e.toString()}";
       });
     }
   }
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen>
       return WeatherModel.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
     } else {
-      throw Exception('Failed to load weather data.');
+      throw Exception('Failed to load weather data');
     }
   }
 
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const   Text(
-                          '30kmpl',
+                          '30kmpl.',
                           style: TextStyle(
                               fontSize: 15,
                               fontFamily: 'Inter',
