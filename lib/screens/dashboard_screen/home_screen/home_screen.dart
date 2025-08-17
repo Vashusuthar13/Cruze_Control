@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen>
       return WeatherModel.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
     } else {
-      throw Exception('Failed to load weather data');
+      throw Exception('Failed to load weather data Please check');
     }
   }
 
