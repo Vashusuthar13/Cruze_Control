@@ -3,6 +3,7 @@ import 'package:cruze_control/controllers/call_logs_controller.dart';
 import 'package:cruze_control/controllers/location_track_conrtoller.dart';
 import 'package:cruze_control/controllers/start_button_controller.dart';
 import 'package:cruze_control/models/call_logs_model.dart';
+import 'package:cruze_control/screens/dashboard_screen/setting_screen/setting_controller.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,12 +23,15 @@ class StartButton extends StatefulWidget {
 class _StartButtonState extends State<StartButton> {
 
   final LocationController locationTrackingController = Get.put(LocationController());
+  final SettingsController settingsController = Get.find<SettingsController>();
   final StartButtonController controller = Get.find();
   final CallLogsController callLogsController = Get.find();
   final Telephony telephony = Telephony.instance;
+  bool isAutoReplyOn = false;
 
   Stream<PhoneState>? _phoneStateStream;
   StreamSubscription<PhoneState>? _phoneStateSubscription;
+
 
   final String customMessage = "I'm riding my bike, will call you back later.";
 
@@ -63,29 +67,31 @@ class _StartButtonState extends State<StartButton> {
       _phoneStateSubscription = null;
       _phoneStateStream = null;
       controller.turnOff();
-
-      locationTrackingController.stopTracking(); // Stop tracking
+      locationTrackingController.stopTracking();
     } else {
       bool granted = await requestPermission();
       if (!granted) return;
 
-      _phoneStateStream = PhoneState.stream;
-      _phoneStateSubscription = _phoneStateStream!.listen((PhoneState state) {
-        try {
-          if (state.status == PhoneStateStatus.CALL_INCOMING && state.number != null) {
-            print("PhoneState: ${state.status} from ${state.number}");
-            _handleIncomingCall(state.number!);
+      // Only activate auto-reply if it's ON in settings
+      if (settingsController.isAutoReplyOn.value) {
+        _phoneStateStream = PhoneState.stream;
+        _phoneStateSubscription = _phoneStateStream!.listen((PhoneState state) {
+          try {
+            if (state.status == PhoneStateStatus.CALL_INCOMING && state.number != null) {
+              _handleIncomingCall(state.number!);
+            }
+          } catch (e) {
+            print('PhoneState error: $e');
           }
-        } catch (e) {
-          print('$e');
-        }
-      });
+        });
+      }
 
       controller.turnOn();
-      locationTrackingController.startTracking(); // Start tracking
+      locationTrackingController.startTracking();
       showAnimatedDialog(context);
     }
   }
+
 
   String getCurrentTime() {
     final now = DateTime.now();

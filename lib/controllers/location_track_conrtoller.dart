@@ -12,6 +12,7 @@ class LocationController extends GetxController {
   RxDouble lastTouchTopSpeed = 0.0.obs; // in m/s
   RxDouble avgSpeed = 0.0.obs; // in m/s
   RxDouble fuelUsed = 0.0.obs; // in liters
+  RxDouble avgMileage = 0.0.obs; // in km/L
 
   RxBool isTracking = false.obs;
   DateTime? _startTime;
@@ -47,6 +48,15 @@ class LocationController extends GetxController {
           position.longitude,
         );
         totalDistance.value += distance;
+      }
+
+      fuelUsed.value = (totalDistance.value / 1000) / bikeMileage;
+
+// Update avg mileage
+      if (fuelUsed.value > 0) {
+        avgMileage.value = (totalDistance.value / 1000) / fuelUsed.value;
+      } else {
+        avgMileage.value = 0.0;
       }
 
       // Update speeds

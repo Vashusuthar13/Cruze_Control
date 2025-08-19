@@ -1,3 +1,4 @@
+import 'package:cruze_control/models/rides_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -15,6 +16,19 @@ class MyRidesPage extends StatelessWidget {
     'Max Time',
     'Top Speed',
   ];
+
+
+
+  RidesModel rideData = RidesModel(
+    VechileName: 'Hunter 350',
+    rideTime: '1 Hour 34 Minutes',
+    totalDistance: '255km',
+    avgSpeed: '26kmpl',
+    topSpeed: '74km/h',
+    fuel: '18km/h',
+    date: '12 May 2025',
+    time: '8:36AM - 10:12AM',
+  );
 
   MyRidesPage({super.key});
 
@@ -140,12 +154,7 @@ class MyRidesPage extends StatelessWidget {
                 height: 30,
               ),
 
-
-              RideStatusCard(),
-              const  SizedBox(
-                height: 20,
-              ),
-              RideStatusCard(),
+              RideStatusCard(ride: rideData,),
             ],
           ),
         ));

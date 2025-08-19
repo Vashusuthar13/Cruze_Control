@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cruze_control/controllers/location_track_conrtoller.dart';
 import 'package:cruze_control/models/weather_model.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import '../../../utills/widgets/on_off_button/on_off_button.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<WeatherModel>? weathermodel;
   late String _currentLocation;
+  final LocationController locationController = Get.put(LocationController());
 
   @override
   void initState() {
@@ -231,8 +234,8 @@ class _HomeScreenState extends State<HomeScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        RichText(
-                            text: const TextSpan(
+                        Obx( () =>RichText(
+                            text:  TextSpan(
                                 text: 'Avg',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -241,15 +244,15 @@ class _HomeScreenState extends State<HomeScreen>
                                     color: Colors.white),
                                 children: [
                               TextSpan(
-                                  text: ' 26kmpl',
+                                  text:  '${locationController.avgMileage.value.toStringAsFixed(1)} km/L',
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w600,
                                       color: Color(0xffF2CE60)))
-                            ])),
-                        RichText(
-                            text: const TextSpan(
+                            ])), ),
+                        Obx (() =>RichText(
+                            text:  TextSpan(
                                 text: 'Distance',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -258,15 +261,15 @@ class _HomeScreenState extends State<HomeScreen>
                                     color: Colors.white),
                                 children: [
                               TextSpan(
-                                  text: ' 18km',
+                                  text: ' ${(locationController.totalDistance.value / 1000).toStringAsFixed(1)} km',
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w600,
                                       color: Color(0xffF2CE60)))
-                            ])),
-                        RichText(
-                            text: const TextSpan(
+                            ])),),
+                        Obx (() =>RichText(
+                            text:  TextSpan(
                                 text: 'Speed',
                                 style: TextStyle(
                                     fontSize: 15,
@@ -275,13 +278,13 @@ class _HomeScreenState extends State<HomeScreen>
                                     color: Colors.white),
                                 children: [
                               TextSpan(
-                                  text: ' 74km/h',
+                                  text: ' ${(locationController.avgSpeed.value * 3.6).toInt()} km/h',
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w600,
                                       color: Color(0xffF2CE60)))
-                            ])),
+                            ])),)
                       ],
                     ),
                   ],
