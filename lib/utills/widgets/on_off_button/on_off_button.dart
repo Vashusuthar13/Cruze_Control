@@ -3,6 +3,7 @@ import 'package:cruze_control/controllers/call_logs_controller.dart';
 import 'package:cruze_control/controllers/location_track_conrtoller.dart';
 import 'package:cruze_control/controllers/start_button_controller.dart';
 import 'package:cruze_control/models/call_logs_model.dart';
+import 'package:cruze_control/pop_up_screen/pop_up_screen.dart';
 import 'package:cruze_control/screens/dashboard_screen/setting_screen/setting_controller.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,8 @@ class _StartButtonState extends State<StartButton> {
   final CallLogsController callLogsController = Get.find();
   final Telephony telephony = Telephony.instance;
   bool isAutoReplyOn = false;
+
+  AddBikePopUp bikePopUp = AddBikePopUp();
 
   Stream<PhoneState>? _phoneStateStream;
   StreamSubscription<PhoneState>? _phoneStateSubscription;
@@ -89,6 +92,7 @@ class _StartButtonState extends State<StartButton> {
       controller.turnOn();
       locationTrackingController.startTracking();
       showAnimatedDialog(context);
+      showAnimatedDialogBikeSelect(context);
     }
   }
 
