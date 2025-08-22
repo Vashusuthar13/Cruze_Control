@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "273324617522",
-    "project_id": "cruzecontrol-7a60f",
-    "storage_bucket": "cruzecontrol-7a60f.firebasestorage.app"
+    "project_number": "452557197929",
+    "project_id": "cruze-control-1fe76",
+    "storage_bucket": "cruze-control-1fe76.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:273324617522:android:22d6203fde5a574125712b",
+        "mobilesdk_app_id": "1:452557197929:android:438e1e60de93685eee08f8",
         "android_client_info": {
           "package_name": "com.example.cruze_control"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB7m7XDzD9fH7_zLPq_CoN0Y43Q7oggAlY"
+          "current_key": "AIzaSyABJVDBydkNxqynKEk8toQpeuuT8RwWih4"
         }
       ],
       "services": {

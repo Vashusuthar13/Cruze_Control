@@ -1,4 +1,5 @@
 import 'package:cruze_control/controllers/setting_conrtoller.dart';
+import 'package:cruze_control/screens/dashboard_screen/setting_screen/setting_controller.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
 
   bool _ison = false;
+  final SettingsController settingsController = Get.put(SettingsController());
   final SettingController controller = Get.put(SettingController());
 
   void _togglePower() {
@@ -104,9 +106,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         return Colors.grey;
                       }),
                     activeTrackColor: AppColors.mainYellow,
-                    value: controller.autoReply.value,
-                    onChanged: (value) {
-                      controller.autoReplTap();
+                    value: settingsController.isAutoReplyOn.value,
+                    onChanged: (bool value) {
+                      settingsController.toggleAutoReply(value);
                     }
                   )
                   )

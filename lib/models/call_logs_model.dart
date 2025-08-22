@@ -31,6 +31,6 @@ class CallModel {
     'icon': icon,
     'number': number,
     'time': time,
-    'day': day,
+    'day': day, 
   };
 }
