@@ -47,7 +47,9 @@ dependencies:
   firebase_database: ^11.3.6
   firebase_auth: ^5.5.4
   flutter_svg: ^2.2.0
-
+  shared_preferences: ^2.5.3
+  cloud_firestore: ^5.6.9
+  fluttertoast: ^8.2.12
 
 
 dev_dependencies:

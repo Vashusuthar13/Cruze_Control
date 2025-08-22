@@ -3,7 +3,11 @@ import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/landing_screen/landing_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../controllers/user_perference_model/user_preference_model.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,22 +23,17 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), _navigateBasedOnAuth);
   }
 
+  UserPreference userPreference = UserPreference();
+
   void _navigateBasedOnAuth() {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LandingScreen()),
-      );
-    }
+    userPreference.getUser().then((value){
+      if (value.token == null || value.token!.isEmpty) {
+        Get.to(const DashboardScreen());
+      }else {
+        Get.to(const LandingScreen());
+      }
+    });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
