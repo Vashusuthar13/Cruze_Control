@@ -1,4 +1,4 @@
-import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
+// import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/login_screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +40,7 @@ class RegisterController extends GetxController {
       Get.offAll(() => LoginScreen());
 
     } on FirebaseAuthException catch (e) {
+      print(e);
       String message = 'Something went wrong';
       if (e.code == 'email-already-in-use') {
         message = 'Email is already in use';

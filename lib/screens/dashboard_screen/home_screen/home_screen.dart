@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen>
       });
     } catch (e) {
       setState(() {
-        _currentLocation = "Errors: ${e.toString()}";
+        _currentLocation = "Error: ${e.toString()}";
       });
     }
   }
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const   Text(
-                          '30kmpl.',
+                          '30kmpl',
                           style: TextStyle(
                               fontSize: 15,
                               fontFamily: 'Inter',
