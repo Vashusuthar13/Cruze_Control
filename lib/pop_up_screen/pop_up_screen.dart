@@ -50,7 +50,7 @@ class _AddBikePopUp extends State<AddBikePopUp> {
                 height: 20,
               ),
               TextFormField(
-                obscureText: true,
+                controller: controller.nicknameController,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.motorcycle, color: Colors.grey),
@@ -104,10 +104,8 @@ class _AddBikePopUp extends State<AddBikePopUp> {
                   return null;
                 },
                 onChanged: (value) {
-                  if (value != null) {
-                    final controller = Get.put(BikeAddController());
-                    controller.bikeSelect(value);
-                  }
+                  controller.selectedCompany.value = value;
+                  if (value != null) controller.bikeSelect(value);
                 },
                 buttonStyleData: const ButtonStyleData(
                   padding: EdgeInsets.only(right: 8),
@@ -142,9 +140,8 @@ class _AddBikePopUp extends State<AddBikePopUp> {
               'Select Bike Model',
               style: TextStyle(color: Colors.white),
             ),
-            onChanged: (value) {
-              controller.selectedModel.value = value;
-            },
+              onChanged: (value) => controller.selectedModel.value = value,
+
             decoration: InputDecoration(
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             ),
@@ -160,6 +157,7 @@ class _AddBikePopUp extends State<AddBikePopUp> {
                 height: 20,
               ),
               TextFormField(
+                controller: controller.mileageController,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.speed, color: Colors.grey),
@@ -186,7 +184,8 @@ class _AddBikePopUp extends State<AddBikePopUp> {
                   style: OutlinedButton.styleFrom(
                       backgroundColor: AppColors.mainGrey,
                       side: BorderSide(color: AppColors.mainYellow)),
-                  onPressed: () {
+                  onPressed: () async {
+                    await controller.saveBike();
                     Navigator.pop(context);
                   },
                   child: Text(
