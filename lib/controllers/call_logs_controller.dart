@@ -1,11 +1,10 @@
 import 'package:cruze_control/models/call_logs_model.dart';
 import 'package:get/get.dart';
-import '../service/firebase_service.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CallLogsController extends GetxController {
   final callLogs = <CallModel>[].obs;
-  final database = FirebaseService.database.ref();
+  final firestore = FirebaseFirestore.instance;
 
   @override
   void onInit() {
@@ -13,16 +12,15 @@ class CallLogsController extends GetxController {
     fetchCallLogs();
   }
 
+
   void fetchCallLogs() async {
     try {
-      DatabaseEvent event = await database.child('call_logs').once();
+      final snapshot = await firestore.collection('call_logs').get();
 
-      if (event.snapshot.value != null) {
-        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
-
-        final logs = data.entries.map((entry) {
-          final value = Map<String, dynamic>.from(entry.value);
-          return CallModel.fromJson(value, entry.key);
+      if (snapshot.docs.isNotEmpty) {
+        final logs = snapshot.docs.map((doc) {
+          final data = doc.data();
+          return CallModel.fromJson(data, doc.id);
         }).toList();
 
         callLogs.assignAll(logs);
@@ -37,25 +35,46 @@ class CallLogsController extends GetxController {
 
   void addCall(CallModel call) async {
     try {
-      await database.child('call_logs').push().set(call.toJson());
-      callLogs.add(call);
-      print("Uploaded to Firebase and added locally");
+      final docRef =
+      await firestore.collection('call_logs').add(call.toJson());
+
+
+      final newCall = call.copyWith(key: docRef.id);
+      callLogs.add(newCall);
+
+      print("Uploaded to Firestore and added locally");
     } catch (e) {
-      print("Firebase upload failed: $e");
+      print("Firestore upload failed: $e");
     }
   }
 
-  void deleteCall(int index) {
+
+  void deleteCall(int index) async {
     final call = callLogs[index];
     final key = call.key;
 
     if (key != null) {
-      database.child('call_logs').child(key).remove();
+      await firestore.collection('call_logs').doc(key).delete();
     }
     callLogs.removeAt(index);
   }
-  void clearAllCalls() {
-    callLogs.clear();
 
+
+  void clearAllCalls() async {
+    try {
+      final batch = firestore.batch();
+      final querySnapshot = await firestore.collection('call_logs').get();
+
+      for (var doc in querySnapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+      callLogs.clear();
+
+      print("All call logs cleared");
+    } catch (e) {
+      print("Failed to clear calls: $e");
+    }
   }
 }

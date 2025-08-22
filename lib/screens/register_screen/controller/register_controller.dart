@@ -1,6 +1,6 @@
-import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:cruze_control/screens/login_screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,18 +11,30 @@ class RegisterController extends GetxController {
 
   var isLoading = false.obs;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   void registerUser() async {
     isLoading.value = true;
 
     try {
+      final name = nameController.text.trim();
       final email = emailController.text.trim();
       final password = passwordController.text.trim();
 
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // ✅ Create user in Firebase Auth
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
+      // ✅ Store user details in Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'name': name,
+        'email': email,
+        'createdAt': DateTime.now(),
+      });
 
       Get.snackbar(
         'Success',
@@ -34,7 +46,6 @@ class RegisterController extends GetxController {
         borderRadius: 10,
         duration: const Duration(seconds: 2),
       );
-
 
       await Future.delayed(const Duration(seconds: 2));
       Get.offAll(() => LoginScreen());
@@ -63,7 +74,6 @@ class RegisterController extends GetxController {
       isLoading.value = false;
     }
   }
-
 
   @override
   void onClose() {

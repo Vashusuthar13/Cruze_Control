@@ -1,5 +1,6 @@
 import 'package:cruze_control/screens/dashboard_screen/dashboard_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,9 +9,11 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController();
   var isLoading = false.obs;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   void loginUser() async {
     isLoading.value = true;
-
 
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -27,10 +30,17 @@ class LoginController extends GetxController {
     }
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // ✅ Store/update user data in Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'email': email,
+        'lastLogin': DateTime.now(),
+      }, SetOptions(merge: true)); // merge so data won't overwrite existing fields
 
       Get.snackbar(
         'Success',
@@ -70,4 +80,3 @@ class LoginController extends GetxController {
     super.onClose();
   }
 }
-

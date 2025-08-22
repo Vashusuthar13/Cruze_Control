@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cruze_control/controllers/setting_conrtoller.dart';
 import 'package:cruze_control/screens/dashboard_screen/setting_screen/setting_controller.dart';
 import 'package:cruze_control/utills/app_styles/app_colors.dart';
@@ -35,6 +36,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -50,41 +54,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: AppColors.lightGrey),
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundColor: AppColors.mainGrey,
-                      child: SvgPicture.asset('assets/svg_icons/user.svg'),
-                    ),
-                    const  SizedBox(
-                      width: 20,
-                    ),
-                    const   Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Anand Suthar',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          'anandsuthar13@gmail.com',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
+          FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              if (!snapshot.hasData || !snapshot.data!.exists) {
+                return const Text("No user data found",
+                    style: TextStyle(color: Colors.white));
+              }
 
-                  ],
-                ),
+              var userData =
+              snapshot.data!.data() as Map<String, dynamic>;
+
+              return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: AppColors.lightGrey,
+                  ),
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundColor: AppColors.mainGrey,
+                          child: SvgPicture.asset('assets/svg_icons/user.svg'),
+                        ),
+                        const SizedBox(width: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userData['name'] ?? "Unknown User",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              userData['email'] ?? "",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ]
+                  )
+              );
+            }
               ),
+
+
+
               const   SizedBox(
                 height: 30,
               ),
